@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#0d2b2b">
+    <title>TPC Student Register | Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Syne:wght@600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="dashboard.css">
+    <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
+    <script type="module" src="dashboard.js" defer></script>
+</head>
+
+<body>
+    <header class="topbar">
+        <a class="brand" href="dashboard.html"><img src="../Imgages/AndUsLoginLogo.png.png" alt="TPC logo"><span>TPC
+                Register</span></a>
+        <div class="topbar-actions"><button class="mobile-menu" id="mobile-menu" type="button"
+                aria-label="Open menu">&#9776;</button><button class="sign-out" id="sign-out" type="button">Sign out
+                <span aria-hidden="true">&#8594;</span></button></div>
+    </header>
+    <div class="app-layout">
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-heading">
+                <p class="eyebrow">Workspace menu</p><button class="close-menu" id="close-menu" type="button"
+                    aria-label="Close menu">&#10005;</button>
+            </div>
+            <nav class="menu" aria-label="Dashboard menu">
+                <button class="menu-item active" data-view="overview" type="button"><span
+                        class="menu-icon">&#9632;</span>Overview</button>
+                <button class="menu-item" data-view="register" type="button"><span
+                        class="menu-icon">&#43;</span>Register a new student</button>
+                <button class="menu-item" data-view="attendance" type="button"><span
+                        class="menu-icon">&#10003;</span>Mark the register</button>
+                <button class="menu-item" data-view="report" type="button"><span class="menu-icon">&#9113;</span>Print a
+                    report</button>
+            </nav>
+        </aside>
+        <main class="dashboard-shell">
+            <section class="view active-view" id="overview-view">
+                <section class="welcome-block">
+                    <p class="eyebrow">Student register</p>
+                    <h1>Good to see you,<br><span id="profile-name">there</span>.</h1>
+                    <p class="intro">Your register workspace is ready. Keep your student records clear, current, and
+                        connected.</p>
+                </section>
+                <section class="summary-grid" aria-label="Account summary">
+                    <article class="summary-card highlight">
+                        <p class="card-label">Profile status</p>
+                        <div class="status-row"><span class="status-dot"></span><strong>Active</strong></div>
+                        <p class="card-detail">Your account is ready to use.</p>
+                    </article>
+                    <article class="summary-card">
+                        <p class="card-label">Signed in as</p>
+                        <strong class="email-value" id="profile-email">Loading...</strong>
+                        <p class="card-detail">Firebase authenticated account</p>
+                    </article>
+                </section>
+                <section class="empty-register">
+                    <div class="section-heading">
+                        <div>
+                            <p class="eyebrow">Workspace</p>
+                            <h2>Student records</h2>
+                        </div><span class="coming-soon">Ready for entries</span>
+                    </div>
+                    <p>Your authenticated workspace is set up. Student record tools can be added here as your register
+                        grows.</p>
+                </section>
+            </section>
+            <section class="view" id="register-view">
+                <p class="eyebrow">Student register</p>
+                <h2>Register a new student</h2>
+                <p class="view-intro">Add a student to your register with the essential details.</p>
+                <form class="student-form" id="student-form">
+                    <div class="form-field"><label for="student-name">Full name</label><input id="student-name"
+                            type="text" required placeholder="Student full name"></div>
+                    <div class="form-field"><label for="student-id">Student ID</label><input id="student-id" type="text"
+                            required placeholder="e.g. TPC-2026-001"></div>
+                    <div class="form-field"><label for="student-course">Course</label><input id="student-course"
+                            type="text" required placeholder="Course or department"></div>
+                    <div class="form-field"><label for="student-email">Email address</label><input id="student-email"
+                            type="email" required placeholder="student@example.com"></div><button class="primary-action"
+                        type="submit">Save student <span aria-hidden="true">&#8594;</span></button>
+                    <p class="form-feedback" id="student-feedback" role="status"></p>
+                </form>
+            </section>
+            <section class="view" id="attendance-view">
+                <p class="eyebrow">Daily attendance</p>
+                <h2>Mark the register</h2>
+                <p class="view-intro">Record attendance for today’s student register.</p>
+                <div class="register-toolbar"><label for="attendance-date-input">Register date</label><input
+                        id="attendance-date-input" type="date"><span id="attendance-count">0 present · 0 absent</span>
+                </div>
+                <div class="search-box"><label for="student-search">Search students</label><input id="student-search"
+                        type="search" placeholder="Search by name, ID, or course" autocomplete="off"></div>
+                <div class="attendance-list" id="attendance-list">
+                    <p class="empty-note" id="attendance-empty">No students have been registered yet.</p>
+                </div>
+            </section>
+            <section class="view" id="report-view">
+                <p class="eyebrow">Reports</p>
+                <h2>Print a report</h2>
+                <p class="view-intro">Select a date range, then export the attendance register as an Excel workbook.</p>
+                <div class="report-range"><div><label for="report-start-date">From</label><input id="report-start-date" type="date"></div><div><label for="report-end-date">To</label><input id="report-end-date" type="date"></div></div>
+                <div class="report-preview">
+                    <div>
+                        <p class="card-label">TPC Student Register</p>
+                        <h3>Register summary</h3>
+                        <p>Date range <span id="report-date"></span></p>
+                    </div>
+                    <div class="report-stat"><strong id="report-count">0</strong><span>students recorded</span></div>
+                </div><button class="primary-action" id="print-report" type="button">Download Excel report <span
+                        aria-hidden="true">&#8595;</span></button>
+                <p class="form-feedback" id="report-feedback" role="status"></p>
+            </section>
+        </main>
+    </div>
+</body>
+
+</html>

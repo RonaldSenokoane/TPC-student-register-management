@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#0d2b2b">
+    <title>TPC Student Register | Sign in</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Syne:wght@600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="login.css">
+    <script type="module" src="login.js" defer></script>
+</head>
+
+<body>
+    <main class="auth-shell">
+        <section class="brand-panel" aria-label="TPC Student Register">
+            <div class="brand-mark"><img src="../Imgages/AndUsLoginLogo.png.png" alt="TPC logo"></div>
+            <p class="eyebrow">Training and Placement Cell</p>
+            <h1>Keep every student journey in view.</h1>
+            <p class="brand-copy">A clear, connected register for the people and opportunities that shape what comes
+                next.</p>
+            <div class="brand-line"></div>
+            <p class="brand-note">TPC student register management</p>
+        </section>
+        <section class="form-panel">
+            <div class="form-wrap">
+                <p class="eyebrow">Welcome back</p>
+                <h2 id="form-title">Sign in to your account</h2>
+                <p class="form-subtitle" id="form-subtitle">Enter your details to continue to the register.</p>
+                <div class="mode-switch" role="tablist" aria-label="Account access">
+                    <button class="mode-button active" id="login-tab" type="button" role="tab" aria-selected="true">Sign
+                        in</button>
+                    <button class="mode-button" id="signup-tab" type="button" role="tab" aria-selected="false">Create
+                        profile</button>
+                </div>
+                <form id="auth-form">
+                    <div class="field hidden" id="name-field">
+                        <label for="name">Full name</label>
+                        <input id="name" name="name" type="text" autocomplete="name" placeholder="Your full name">
+                    </div>
+                    <div class="field">
+                        <label for="email">Email address</label>
+                        <input id="email" name="email" type="email" autocomplete="email" placeholder="you@example.com"
+                            required>
+                    </div>
+                    <div class="field">
+                        <label for="password">Password</label>
+                        <div class="password-wrap">
+                            <input id="password" name="password" type="password" autocomplete="current-password"
+                                placeholder="At least 6 characters" minlength="6" required>
+                            <button class="password-toggle" type="button" data-target="password"
+                                aria-label="Show password">Show</button>
+                        </div>
+                    </div>
+                    <div class="field hidden" id="confirm-field">
+                        <label for="confirm-password">Confirm password</label>
+                        <div class="password-wrap">
+                            <input id="confirm-password" name="confirm-password" type="password"
+                                autocomplete="new-password" placeholder="Repeat your password">
+                            <button class="password-toggle" type="button" data-target="confirm-password"
+                                aria-label="Show password">Show</button>
+                        </div>
+                    </div>
+                    <button class="submit-button" id="submit-button" type="submit">Sign in <span
+                            aria-hidden="true">&#8594;</span></button>
+                    <p class="status" id="status" role="alert" aria-live="polite"></p>
+                </form>
+                <p class="security-note"><span aria-hidden="true">&#9679;</span> Your account is secured by Firebase</p>
+            </div>
+        </section>
+    </main>
+</body>
+
+</html>

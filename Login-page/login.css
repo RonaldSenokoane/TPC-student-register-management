@@ -1,0 +1,39 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Syne:wght@600;700;800&display=swap');
+:root { --ink: #122727; --muted: #6d7e7b; --gold: #e7a51d; --cream: #f5f3ed; --line: #dfe5df; }
+* { box-sizing: border-box; }
+body { margin: 0; color: var(--ink); background: var(--cream); font-family: 'DM Sans', sans-serif; }
+.auth-shell { min-height: 100vh; display: grid; grid-template-columns: minmax(340px, 43%) 1fr; }
+.brand-panel { position: relative; overflow: hidden; display: flex; flex-direction: column; justify-content: center; padding: 8vw; color: #f7f4eb; background: #0d2b2b; }
+.brand-panel::after { content: ''; position: absolute; width: 380px; height: 380px; right: -180px; bottom: -150px; border: 1px solid rgba(231,165,29,.45); border-radius: 50%; box-shadow: 0 0 0 36px rgba(231,165,29,.06), 0 0 0 72px rgba(231,165,29,.04); }
+.brand-mark { width: 76px; height: 76px; margin-bottom: 58px; display: grid; place-items: center; border: 1px solid rgba(231,165,29,.5); border-radius: 50%; }
+.brand-mark img { width: 64px; height: 64px; object-fit: contain; }
+.eyebrow { margin: 0 0 18px; color: var(--gold); font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; }
+h1, h2 { margin: 0; font-family: 'Syne', sans-serif; letter-spacing: 0; }
+h1 { max-width: 460px; font-size: clamp(38px, 4.2vw, 68px); line-height: 1.02; }
+.brand-copy { max-width: 390px; margin: 28px 0 0; color: #b8c4bd; font-size: 16px; line-height: 1.7; }
+.brand-line { width: 54px; margin-top: 72px; border-top: 2px solid var(--gold); }
+.brand-note { margin: 16px 0 0; color: #8e9f98; font-size: 12px; letter-spacing: 1px; text-transform: uppercase; }
+.form-panel { display: grid; place-items: center; padding: 48px 8vw; background: #fff; }
+.form-wrap { width: min(100%, 430px); }
+.form-panel h2 { font-size: clamp(28px, 3vw, 38px); line-height: 1.12; }
+.form-subtitle { margin: 14px 0 32px; color: var(--muted); font-size: 15px; }
+.mode-switch { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; padding: 5px; margin-bottom: 28px; background: #f1f4f0; border-radius: 7px; }
+.mode-button { padding: 12px 8px; border: 0; border-radius: 4px; color: var(--muted); background: transparent; cursor: pointer; font: inherit; font-weight: 600; }
+.mode-button.active { color: var(--ink); background: #fff; box-shadow: 0 2px 8px rgba(18,39,39,.09); }
+.field { margin-bottom: 18px; }
+.field.hidden { display: none; }
+label { display: block; margin-bottom: 8px; font-size: 13px; font-weight: 700; }
+.password-wrap { position: relative; }
+input { width: 100%; padding: 14px 15px; border: 1px solid var(--line); border-radius: 4px; outline: none; color: var(--ink); background: #fff; font: inherit; transition: border-color .2s, box-shadow .2s; }
+.password-wrap input { padding-right: 62px; }
+.password-toggle { position: absolute; top: 50%; right: 12px; transform: translateY(-50%); padding: 4px; border: 0; color: var(--muted); background: transparent; cursor: pointer; font: inherit; font-size: 12px; font-weight: 700; }
+.password-toggle:hover, .password-toggle:focus { color: var(--ink); }
+input:focus { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(231,165,29,.14); }
+.submit-button { width: 100%; display: flex; justify-content: space-between; align-items: center; margin-top: 10px; padding: 15px 17px; border: 0; border-radius: 4px; color: #fff; background: var(--ink); cursor: pointer; font: inherit; font-weight: 700; }
+.submit-button:hover { background: #1b3b38; }
+.submit-button:disabled { cursor: wait; opacity: .65; }
+.status { min-height: 20px; margin: 15px 0 0; color: #bb3e35; font-size: 13px; line-height: 1.4; }
+.status.success { color: #287357; }
+.security-note { margin: 54px 0 0; color: #91a09c; font-size: 12px; text-align: center; }
+.security-note span { color: var(--gold); font-size: 8px; vertical-align: 1px; }
+@media (max-width: 720px) { .auth-shell { display: block; } .brand-panel { min-height: 250px; padding: 34px 28px; } .brand-panel h1 { max-width: 500px; font-size: 38px; } .brand-copy, .brand-line, .brand-note { display: none; } .brand-mark { width: 54px; height: 54px; margin: 0 0 24px; } .brand-mark img { width: 45px; height: 45px; } .form-panel { padding: 42px 28px 36px; } }
