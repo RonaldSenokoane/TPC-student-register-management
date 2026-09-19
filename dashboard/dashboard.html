@@ -77,15 +77,26 @@
                 <h2>Register a new student</h2>
                 <p class="view-intro">Add a student to your register with the essential details.</p>
                 <form class="student-form" id="student-form">
-                    <div class="form-field"><label for="student-name">Full name</label><input id="student-name"
-                            type="text" required placeholder="Student full name"></div>
+                    <div class="form-field"><label for="student-name">Name</label><input id="student-name"
+                            type="text" required placeholder="Student name"></div>
+                    <div class="form-field"><label for="student-surname">Surname</label><input id="student-surname"
+                            type="text" required placeholder="Student surname"></div>
                     <div class="form-field"><label for="student-id">Student ID</label><input id="student-id" type="text"
                             required placeholder="e.g. TPC-2026-001"></div>
                     <div class="form-field"><label for="student-course">Course</label><input id="student-course"
                             type="text" required placeholder="Course or department"></div>
-                    <div class="form-field"><label for="student-email">Email address</label><input id="student-email"
-                            type="email" required placeholder="student@example.com"></div><button class="primary-action"
-                        type="submit">Save student <span aria-hidden="true">&#8594;</span></button>
+                    <div class="form-field form-field-full"><label for="student-email">Email address</label><input id="student-email"
+                            type="email" required placeholder="student@example.com"></div>
+                    <div class="form-field form-field-full"><label>Registration type</label>
+                        <div class="mode-picker" aria-label="Registration type">
+                            <label class="mode-option"><input type="radio" name="student-mode" value="online" checked>
+                                <span>Online</span></label>
+                            <label class="mode-option"><input type="radio" name="student-mode" value="in-class">
+                                <span>In Class</span></label>
+                        </div>
+                    </div>
+                    <button class="primary-action" id="student-submit" type="submit">Save student <span aria-hidden="true">&#8594;</span></button>
+                    <button class="secondary-action" id="cancel-student-edit" type="button" hidden>Cancel edit</button>
                     <p class="form-feedback" id="student-feedback" role="status"></p>
                 </form>
             </section>

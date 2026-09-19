@@ -299,6 +299,41 @@ h2 {
     font-weight: 700;
 }
 
+.form-field-full {
+    grid-column: 1 / -1;
+}
+
+.mode-picker {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    padding: 10px 12px;
+    border: 1px solid var(--line);
+    background: #fafaf7;
+}
+
+.mode-option {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 120px;
+    padding: 10px 12px;
+    border: 1px solid transparent;
+    color: var(--ink);
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.mode-option input {
+    accent-color: var(--gold);
+}
+
+.mode-option:has(input:checked) {
+    border-color: var(--gold);
+    background: rgba(231, 165, 29, .08);
+}
+
 .form-field input {
     width: 100%;
     padding: 13px;
@@ -325,6 +360,17 @@ h2 {
 .primary-action span {
     margin-left: 15px;
     color: var(--gold);
+}
+
+.secondary-action {
+    width: max-content;
+    padding: 13px 17px;
+    border: 1px solid var(--line);
+    color: var(--ink);
+    background: #fff;
+    cursor: pointer;
+    font: inherit;
+    font-weight: 700;
 }
 
 .form-feedback {
@@ -410,13 +456,35 @@ h2 {
     gap: 15px;
     padding: 18px 20px;
     border-bottom: 1px solid var(--line);
-    cursor: pointer;
 }
 
 .attendance-row small {
     display: block;
     margin-top: 5px;
     color: var(--muted);
+}
+
+.student-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+}
+
+.row-action {
+    padding: 7px 10px;
+    border: 1px solid var(--line);
+    background: #fff;
+    color: var(--ink);
+    cursor: pointer;
+    font: inherit;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.row-action.delete-action {
+    border-color: #d8b4b4;
+    color: #7d2d2d;
 }
 
 .attendance-check {
