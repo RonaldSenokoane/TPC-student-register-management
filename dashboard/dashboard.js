@@ -26,9 +26,23 @@ const getStudentNameParts = (student) => {
 	return { firstName: parts[0], surname: parts.slice(1).join(' ') };
 };
 const getDateKey = () => document.querySelector('#attendance-date-input').value;
+const formatDateKey = (dateValue) => {
+	const date = dateValue instanceof Date ? new Date(dateValue) : new Date(`${dateValue}T00:00:00`);
+	const timezoneOffset = date.getTimezoneOffset();
+	const normalizedDate = new Date(date.getTime() - timezoneOffset * 60000);
+	return normalizedDate.toISOString().slice(0, 10);
+};
 const getStudentsRef = () => collection(database, 'users', currentUser.uid, 'students');
 const getStudentRef = (studentId) => doc(database, 'users', currentUser.uid, 'students', studentId);
 const getAttendanceRef = (studentId, date) => doc(database, 'users', currentUser.uid, 'attendance', `${studentId}_${date}`);
+const syncAttendanceRecord = (studentId, date, present, mode) => {
+	const normalizedMode = mode === 'in-class' ? 'in-class' : 'online';
+	const normalizedDate = formatDateKey(date);
+	const attendanceState = { present: present === true, mode: normalizedMode };
+	attendanceRecords.set(`${studentId}_${normalizedDate}`, attendanceState);
+	if (normalizedDate === getDateKey()) attendance.set(studentId, attendanceState);
+	return attendanceState;
+};
 const withTimeout = (promise, milliseconds) => Promise.race([
 	promise,
 	new Promise((_, reject) => setTimeout(() => reject(new Error('Save timed out after 2 minutes. Check your connection and try again.')), milliseconds))
@@ -118,10 +132,7 @@ async function loadAttendance() {
 	const attendanceSnapshot = await getDocs(collection(database, 'users', currentUser.uid, 'attendance'));
 	attendanceSnapshot.forEach((attendanceDoc) => {
 		const record = attendanceDoc.data();
-		const normalizedMode = record.mode === 'in-class' ? 'in-class' : 'online';
-		const attendanceState = { present: record.present === true, mode: normalizedMode };
-		attendanceRecords.set(`${record.studentId}_${record.date}`, attendanceState);
-		if (record.date === getDateKey()) attendance.set(record.studentId, attendanceState);
+		syncAttendanceRecord(record.studentId, record.date, record.present, record.mode);
 	});
 }
 
@@ -172,11 +183,12 @@ async function handleAttendanceChange(event) {
 	const student = students.find((item) => item.id === studentId);
 	const mode = student?.mode === 'in-class' ? 'in-class' : 'online';
 	const present = checkbox.checked;
-	const attendanceState = { present, mode };
+	const attendanceDate = getDateKey();
+	const attendanceState = syncAttendanceRecord(studentId, attendanceDate, present, mode);
 	attendance.set(studentId, attendanceState);
 	checkbox.closest('.attendance-row').querySelector('.checkmark').textContent = `${present ? 'Present' : 'Absent'} · ${getModeDisplay(mode)}`;
 	updateAttendanceCount();
-	await setDoc(getAttendanceRef(studentId, getDateKey()), { studentId, date: getDateKey(), present, mode, updatedAt: new Date() });
+	await setDoc(getAttendanceRef(studentId, attendanceDate), { studentId, date: attendanceDate, present, mode, updatedAt: new Date() });
 }
 
 dateInput.addEventListener('change', async () => {
@@ -235,7 +247,11 @@ async function handleDeleteStudent(studentId) {
 		await deleteDoc(getStudentRef(studentId));
 		const attendanceQuery = query(collection(database, 'users', currentUser.uid, 'attendance'), where('studentId', '==', studentId));
 		const attendanceSnapshot = await getDocs(attendanceQuery);
-		await Promise.all(attendanceSnapshot.docs.map((attendanceDoc) => deleteDoc(attendanceDoc.ref)));
+		await Promise.all(attendanceSnapshot.docs.map((attendanceDoc) => {
+			const record = attendanceDoc.data();
+			attendanceRecords.delete(`${record.studentId}_${record.date}`);
+			return deleteDoc(attendanceDoc.ref);
+		}));
 		students = students.filter((item) => item.id !== studentId);
 		attendance.delete(studentId);
 		const feedback = document.querySelector('#student-feedback');
@@ -288,77 +304,127 @@ document.querySelector('#print-report').addEventListener('click', async () => {
 		feedback.textContent = 'Choose a valid date range before exporting.';
 		return;
 	}
+
 	const start = new Date(`${reportStartDate.value}T00:00:00`);
 	const end = new Date(`${reportEndDate.value}T00:00:00`);
+	const monthStart = new Date(start.getFullYear(), start.getMonth(), 1);
+	const firstWeekStart = new Date(monthStart);
+	const dayOffset = (firstWeekStart.getDay() + 6) % 7;
+	firstWeekStart.setDate(firstWeekStart.getDate() - dayOffset);
 	const weekRanges = Array.from({ length: 5 }, (_, index) => {
-		const weekStart = new Date(start);
-		weekStart.setDate(start.getDate() + index * 7);
+		const weekStart = new Date(firstWeekStart);
+		weekStart.setDate(firstWeekStart.getDate() + index * 7);
 		const weekEnd = new Date(weekStart);
 		weekEnd.setDate(weekStart.getDate() + 6);
 		if (weekEnd > end) weekEnd.setTime(end.getTime());
 		return { start: weekStart, end: weekEnd };
 	});
+
 	const getWeekAttendance = (studentId, range) => {
 		let attended = 0;
 		for (let currentDate = new Date(range.start); currentDate <= range.end; currentDate.setDate(currentDate.getDate() + 1)) {
-			const record = attendanceRecords.get(`${studentId}_${currentDate.toISOString().slice(0, 10)}`);
-			if (record && record.present === true && record.mode === (students.find((student) => student.id === studentId)?.mode || 'online')) attended += 1;
+			const record = attendanceRecords.get(`${studentId}_${formatDateKey(currentDate)}`);
+			if (record && record.present === true) attended += 1;
 		}
 		return attended;
 	};
-	const buildModeRows = (studentGroup, modeLabel) => studentGroup.map((student, index) => {
-		const weeklyAttendance = weekRanges.map((range) => getWeekAttendance(student.id, range));
-		const monthlyDays = weeklyAttendance.reduce((total, week) => total + week, 0);
-		return { 'No.': index + 1, Mode: modeLabel, 'Name and Surname': student.name, Course: student.course || 'Unassigned', 'Week 1 Attended': weeklyAttendance[0], 'Week 2 Attended': weeklyAttendance[1], 'Week 3 Attended': weeklyAttendance[2], 'Week 4 Attended': weeklyAttendance[3], 'Week 5 Attended': weeklyAttendance[4], 'Monthly Days': monthlyDays, 'Total Stipend': monthlyDays * 50, Unity: '', Summative: '', Payable: 0 };
+
+	const cohortMap = new Map();
+	students.forEach((student) => {
+		const modeLabel = student.mode === 'in-class' ? 'PHYSICAL' : 'ONLINE';
+		const cohortName = `${(student.course || 'Unassigned').toUpperCase()} ${modeLabel}`;
+		const cohortKey = `${(student.course || 'Unassigned').toLowerCase()}|${student.mode === 'in-class' ? 'physical' : 'online'}`;
+		if (!cohortMap.has(cohortKey)) {
+			cohortMap.set(cohortKey, {
+				cohortName,
+				students: [],
+				weekly: [0, 0, 0, 0, 0]
+			});
+		}
+		const cohort = cohortMap.get(cohortKey);
+		cohort.students.push(student);
+		const weekly = weekRanges.map((range) => getWeekAttendance(student.id, range));
+		cohort.weekly = cohort.weekly.map((value, index) => value + weekly[index]);
 	});
-	const buildSummaryRows = (studentGroup, modeLabel) => {
-		const cohortTotals = new Map();
-		studentGroup.forEach((student) => {
-			const cohort = student.course || 'Unassigned';
-			const weeklyAttendance = weekRanges.map((range) => getWeekAttendance(student.id, range));
-			const existing = cohortTotals.get(cohort) || [0, 0, 0, 0, 0];
-			cohortTotals.set(cohort, existing.map((total, index) => total + weeklyAttendance[index]));
-		});
-		return Array.from(cohortTotals, ([cohort, weekly]) => ({ Mode: modeLabel, Cohort: cohort, 'Week 1': weekly[0], 'Week 2': weekly[1], 'Week 3': weekly[2], 'Week 4': weekly[3], 'Week 5': weekly[4], 'Monthly Average': Number((weekly.reduce((total, value) => total + value, 0) / 5).toFixed(1)) }));
-	};
-	const onlineStudents = students.filter((student) => (student.mode || 'online') === 'online');
-	const inClassStudents = students.filter((student) => (student.mode || 'in-class') === 'in-class');
+
 	const workbook = window.XLSX.utils.book_new();
-	workbook.Workbook = { CalcPr: { calcMode: 'auto', fullCalcOnLoad: true, forceFullCalc: true } };
-	const monthLabel = new Date(`${reportStartDate.value}T00:00:00`).toLocaleDateString(undefined, { month: 'long', year: 'numeric' }).toUpperCase();
-	const createWorksheet = (rows, title, modeLabel) => {
-		const worksheet = window.XLSX.utils.json_to_sheet(rows, { origin: 'A2' });
-		window.XLSX.utils.sheet_add_aoa(worksheet, [[`${modeLabel.toUpperCase()} STUDENTS REGISTER - ${monthLabel}`]], { origin: 'A1' });
-		worksheet['!merges'] = [{ s: { r: 0, c: 0 }, e: { r: 0, c: 12 } }];
-		worksheet['!cols'] = [{ wch: 7 }, { wch: 12 }, { wch: 26 }, { wch: 18 }, { wch: 16 }, { wch: 16 }, { wch: 16 }, { wch: 16 }, { wch: 16 }, { wch: 14 }, { wch: 15 }, { wch: 10 }, { wch: 12 }, { wch: 10 }];
-		rows.forEach((_, index) => {
-			const rowNumber = index + 3;
-			worksheet[`M${rowNumber}`] = {
-				f: `IF(AND(IF(K${rowNumber}>1,K${rowNumber}/100,K${rowNumber})>=60%,IF(L${rowNumber}>1,L${rowNumber}/100,L${rowNumber})>=60%),J${rowNumber},0)`,
-				v: 0,
-				t: 'n'
-			};
+	const reportSheet = window.XLSX.utils.aoa_to_sheet([]);
+	const rows = [];
+	const merges = [];
+	let currentRow = 1;
+
+	rows.push(['WEEKLY AND MONTHLY ATTENDANCE REPORT']);
+	merges.push({ s: { r: 0, c: 0 }, e: { r: 0, c: 6 } });
+	rows.push(['Cohort', 'Week 1', 'Week 2', 'Week 3', 'Week 4', 'Week 5', 'Monthly Average']);
+	currentRow += 2;
+
+	Array.from(cohortMap.values()).forEach((cohort) => {
+		const summaryRow = currentRow + 1;
+		rows.push([
+			cohort.cohortName,
+			cohort.weekly[0],
+			cohort.weekly[1],
+			cohort.weekly[2],
+			cohort.weekly[3],
+			cohort.weekly[4],
+			null
+		]);
+		reportSheet[`G${summaryRow}`] = { t: 'n', f: `AVERAGE(B${summaryRow}:F${summaryRow})`, v: 0 };
+		currentRow += 1;
+	});
+
+	rows.push([]);
+	currentRow += 1;
+
+	Array.from(cohortMap.values()).forEach((cohort) => {
+		const titleRow = currentRow + 1;
+		rows.push([`${cohort.cohortName} STUDENTS REGISTER`]);
+		merges.push({ s: { r: titleRow, c: 0 }, e: { r: titleRow, c: 11 } });
+		rows.push(['No.', 'Name and Surname', 'Week 1', 'Week 2', 'Week 3', 'Week 4', 'Week 5', 'Monthly Days', 'Total Stipend', 'Unity', 'Summative', 'Payable']);
+		currentRow += 2;
+
+		cohort.students.forEach((student, index) => {
+			const rowNumber = currentRow + 1;
+			rows.push([
+				index + 1,
+				`${student.name || ''} ${student.surname || ''}`.trim(),
+				getWeekAttendance(student.id, weekRanges[0]),
+				getWeekAttendance(student.id, weekRanges[1]),
+				getWeekAttendance(student.id, weekRanges[2]),
+				getWeekAttendance(student.id, weekRanges[3]),
+				getWeekAttendance(student.id, weekRanges[4]),
+				null,
+				null,
+				'',
+				'',
+				null
+			]);
+			reportSheet[`H${rowNumber}`] = { t: 'n', f: `SUM(C${rowNumber}:G${rowNumber})`, v: 0 };
+			reportSheet[`I${rowNumber}`] = { t: 'n', f: `H${rowNumber}*50`, v: 0 };
+			reportSheet[`L${rowNumber}`] = { t: 'n', f: `IF(OR(J${rowNumber}="",K${rowNumber}=""),0,MAX(I${rowNumber}-J${rowNumber}-K${rowNumber},0))`, v: 0 };
+			currentRow += 1;
 		});
-		return worksheet;
-	};
-	const onlineRows = buildModeRows(onlineStudents, 'Online');
-	const inClassRows = buildModeRows(inClassStudents, 'In Class');
-	const onlineSummaryRows = buildSummaryRows(onlineStudents, 'Online');
-	const inClassSummaryRows = buildSummaryRows(inClassStudents, 'In Class');
-	const onlineWorksheet = createWorksheet(onlineRows, 'Online Students', 'Online');
-	const inClassWorksheet = createWorksheet(inClassRows, 'In Class Students', 'In Class');
-	const onlineSummaryWorksheet = window.XLSX.utils.json_to_sheet(onlineSummaryRows, { origin: 'A2' });
-	const inClassSummaryWorksheet = window.XLSX.utils.json_to_sheet(inClassSummaryRows, { origin: 'A2' });
-	window.XLSX.utils.sheet_add_aoa(onlineSummaryWorksheet, [['ONLINE WEEKLY AND MONTHLY ATTENDANCE REPORT']], { origin: 'A1' });
-	window.XLSX.utils.sheet_add_aoa(inClassSummaryWorksheet, [['IN CLASS WEEKLY AND MONTHLY ATTENDANCE REPORT']], { origin: 'A1' });
-	onlineSummaryWorksheet['!merges'] = [{ s: { r: 0, c: 0 }, e: { r: 0, c: 8 } }];
-	inClassSummaryWorksheet['!merges'] = [{ s: { r: 0, c: 0 }, e: { r: 0, c: 8 } }];
-	onlineSummaryWorksheet['!cols'] = [{ wch: 18 }, { wch: 28 }, { wch: 12 }, { wch: 12 }, { wch: 12 }, { wch: 12 }, { wch: 12 }, { wch: 16 }, { wch: 18 }];
-	inClassSummaryWorksheet['!cols'] = [{ wch: 18 }, { wch: 28 }, { wch: 12 }, { wch: 12 }, { wch: 12 }, { wch: 12 }, { wch: 12 }, { wch: 16 }, { wch: 18 }];
-	window.XLSX.utils.book_append_sheet(workbook, onlineWorksheet, 'Online Students');
-	window.XLSX.utils.book_append_sheet(workbook, onlineSummaryWorksheet, 'Online Summary');
-	window.XLSX.utils.book_append_sheet(workbook, inClassWorksheet, 'In Class Students');
-	window.XLSX.utils.book_append_sheet(workbook, inClassSummaryWorksheet, 'In Class Summary');
-	window.XLSX.writeFile(workbook, `TPC-register-${reportStartDate.value}-to-${reportEndDate.value}.xlsx`);
-	feedback.textContent = 'Excel report downloaded with online and in-class reports separated.';
+		rows.push([]);
+		currentRow += 1;
+	});
+
+	XLSX.utils.sheet_add_aoa(reportSheet, rows, { origin: 'A1' });
+	reportSheet['!merges'] = merges;
+	reportSheet['!cols'] = [
+		{ wch: 8 },
+		{ wch: 26 },
+		{ wch: 12 },
+		{ wch: 12 },
+		{ wch: 12 },
+		{ wch: 12 },
+		{ wch: 12 },
+		{ wch: 12 },
+		{ wch: 14 },
+		{ wch: 10 },
+		{ wch: 10 },
+		{ wch: 12 }
+	];
+	window.XLSX.utils.book_append_sheet(workbook, reportSheet, 'Attendance Report');
+	XLSX.writeFile(workbook, `TPC-register-${reportStartDate.value}-to-${reportEndDate.value}.xlsx`);
+	feedback.textContent = 'Excel report downloaded with formulas now calculating correctly.';
 });
