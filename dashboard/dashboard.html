@@ -37,8 +37,6 @@
                         class="menu-icon">&#43;</span>Register a new student</button>
                 <button class="menu-item" data-view="attendance" type="button"><span
                         class="menu-icon">&#10003;</span>Mark the register</button>
-                <button class="menu-item" data-view="report" type="button"><span class="menu-icon">&#9113;</span>Print a
-                    report</button>
             </nav>
         </aside>
         <main class="dashboard-shell">
@@ -85,6 +83,10 @@
                             required placeholder="e.g. TPC-2026-001"></div>
                     <div class="form-field"><label for="student-course">Course</label><input id="student-course"
                             type="text" required placeholder="Course or department"></div>
+                        <div class="form-field"><label for="student-id-number">ID number <span class="optional-label">Optional</span></label><input id="student-id-number"
+                            type="text" autocomplete="off" placeholder="Identity number"></div>
+                        <div class="form-field"><label for="student-phone">Cell phone number <span class="optional-label">Optional</span></label><input id="student-phone"
+                            type="tel" autocomplete="tel" placeholder="e.g. 071 234 5678"></div>
                     <div class="form-field form-field-full"><label for="student-email">Email address</label><input id="student-email"
                             type="email" required placeholder="student@example.com"></div>
                     <div class="form-field form-field-full"><label>Registration type</label>
@@ -104,30 +106,54 @@
                 <p class="eyebrow">Daily attendance</p>
                 <h2>Mark the register</h2>
                 <p class="view-intro">Record attendance for today’s student register.</p>
-                <div class="register-toolbar"><label for="attendance-date-input">Register date</label><input
-                        id="attendance-date-input" type="date"><span id="attendance-count">0 present · 0 absent</span>
-                </div>
-                <div class="search-box"><label for="student-search">Search students</label><input id="student-search"
-                        type="search" placeholder="Search by name, ID, or course" autocomplete="off"></div>
-                <div class="attendance-list" id="attendance-list">
-                    <p class="empty-note" id="attendance-empty">No students have been registered yet.</p>
-                </div>
-            </section>
-            <section class="view" id="report-view">
-                <p class="eyebrow">Reports</p>
-                <h2>Print a report</h2>
-                <p class="view-intro">Select a date range, then export the attendance register as an Excel workbook.</p>
-                <div class="report-range"><div><label for="report-start-date">From</label><input id="report-start-date" type="date"></div><div><label for="report-end-date">To</label><input id="report-end-date" type="date"></div></div>
-                <div class="report-preview">
-                    <div>
-                        <p class="card-label">TPC Student Register</p>
-                        <h3>Register summary</h3>
-                        <p>Date range <span id="report-date"></span></p>
+                <section class="report-section" aria-labelledby="report-heading">
+                    <p class="eyebrow">Attendance report</p>
+                    <h3 id="report-heading">Print a report</h3>
+                    <p class="view-intro">Select a date range, then export the attendance register as an Excel workbook.</p>
+                    <div class="report-range"><div><label for="report-start-date">From</label><input id="report-start-date" type="date"></div><div><label for="report-end-date">To</label><input id="report-end-date" type="date"></div></div>
+                    <div class="report-preview">
+                        <div>
+                            <p class="card-label">TPC Student Register</p>
+                            <h3>Register summary</h3>
+                            <p>Date range <span id="report-date"></span></p>
+                        </div>
+                        <div class="report-stat"><strong id="report-count">0</strong><span>students recorded</span></div>
                     </div>
-                    <div class="report-stat"><strong id="report-count">0</strong><span>students recorded</span></div>
-                </div><button class="primary-action" id="print-report" type="button">Download Excel report <span
-                        aria-hidden="true">&#8595;</span></button>
-                <p class="form-feedback" id="report-feedback" role="status"></p>
+                    <button class="primary-action" id="print-report" type="button">Download Excel report <span
+                            aria-hidden="true">&#8595;</span></button>
+                    <p class="form-feedback" id="report-feedback" role="status"></p>
+                </section>
+                <div class="attendance-content">
+                    <div class="register-toolbar"><label for="attendance-date-input">Register date</label><input
+                            id="attendance-date-input" type="date"><span id="attendance-count">0 present · 0 absent</span>
+                    </div>
+                    <section class="absence-monitor" aria-labelledby="absence-heading">
+                        <div class="absence-monitor-heading">
+                            <div>
+                                <p class="eyebrow">Attendance follow-up</p>
+                                <h3 id="absence-heading">Long absences</h3>
+                                <p class="absence-help">Learners absent for more than 8 working days. Mondays to Thursdays count; Fridays, weekends, saved holidays, and an unmarked today do not. Email reminders open a prepared draft in your email app.</p>
+                            </div>
+                            <form class="holiday-form" id="holiday-form">
+                                <label for="holiday-date">School holiday</label>
+                                <div><input id="holiday-date" type="date" required><button class="row-action" type="submit">Add date</button></div>
+                            </form>
+                        </div>
+                        <details class="holiday-details">
+                            <summary>Excluded holidays <span id="holiday-count">0 dates</span></summary>
+                            <div class="holiday-list" id="holiday-list"><p>No holiday dates added.</p></div>
+                        </details>
+                        <div class="absence-alert-list" id="absence-alert-list" aria-live="polite">
+                            <p class="empty-note">No learners currently exceed the absence threshold.</p>
+                        </div>
+                        <p class="form-feedback" id="holiday-feedback" role="status"></p>
+                    </section>
+                    <div class="search-box"><label for="student-search">Search students</label><input id="student-search"
+                            type="search" placeholder="Search by name, ID, or course" autocomplete="off"></div>
+                    <div class="attendance-list" id="attendance-list">
+                        <p class="empty-note" id="attendance-empty">No students have been registered yet.</p>
+                    </div>
+                </div>
             </section>
         </main>
     </div>

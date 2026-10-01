@@ -12,6 +12,10 @@ service cloud.firestore {
       match /attendance/{attendanceId} {
         allow read, write: if isOwner(userId);
       }
+
+      match /holidays/{holidayDate} {
+        allow read, write: if isOwner(userId);
+      }
     }
 
     function isOwner(userId) {

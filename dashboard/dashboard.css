@@ -299,6 +299,13 @@ h2 {
     font-weight: 700;
 }
 
+.optional-label {
+    margin-left: 5px;
+    color: var(--muted);
+    font-size: 11px;
+    font-weight: 500;
+}
+
 .form-field-full {
     grid-column: 1 / -1;
 }
@@ -383,11 +390,10 @@ h2 {
 .register-toolbar {
     display: flex;
     align-items: center;
-    gap: 14px;
-    max-width: 700px;
-    padding: 17px 20px;
-    border-bottom: 2px solid var(--gold);
-    background: #fff;
+    gap: 16px;
+    max-width: 820px;
+    padding: 0 0 16px;
+    border-bottom: 1px solid var(--line);
 }
 
 .register-toolbar label {
@@ -398,7 +404,8 @@ h2 {
 }
 
 .register-toolbar input {
-    padding: 8px;
+    min-width: 180px;
+    padding: 9px 10px;
     border: 1px solid var(--line);
     color: var(--ink);
     font: inherit;
@@ -408,19 +415,164 @@ h2 {
     color: #287357;
     font-size: 13px;
     font-weight: 700;
+    white-space: nowrap;
+}
+
+.absence-monitor {
+    max-width: 820px;
+    padding: 20px 0;
+    border-bottom: 1px solid var(--line);
+}
+
+.absence-monitor-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+    gap: 24px;
+}
+
+.absence-monitor-heading h3 {
+    margin: 0;
+    font-family: 'Syne', sans-serif;
+    font-size: 20px;
+}
+
+.absence-monitor-heading .eyebrow {
+    margin: 0 0 6px;
+}
+
+.absence-help {
+    max-width: 540px;
+    margin: 7px 0 0;
+    color: var(--muted);
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+.holiday-form {
+    display: grid;
+    gap: 7px;
+    min-width: 245px;
+}
+
+.holiday-form label {
+    color: var(--muted);
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.holiday-form > div {
+    display: flex;
+    gap: 8px;
+}
+
+.holiday-form input {
+    min-width: 0;
+    width: 100%;
+    padding: 8px;
+    border: 1px solid var(--line);
+    color: var(--ink);
+    font: inherit;
+}
+
+.holiday-details {
+    margin-top: 14px;
+    color: var(--muted);
+    font-size: 12px;
+}
+
+.holiday-details summary {
+    width: max-content;
+    cursor: pointer;
+    font-weight: 700;
+}
+
+.holiday-details summary span {
+    margin-left: 6px;
+    font-weight: 400;
+}
+
+.holiday-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 16px;
+    padding-top: 10px;
+}
+
+.holiday-list p {
+    margin: 0;
+}
+
+.holiday-date-row {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+}
+
+.holiday-remove {
+    padding: 2px 5px;
+    border: 0;
+    color: #7d2d2d;
+    background: transparent;
+    cursor: pointer;
+    font: inherit;
+}
+
+.absence-alert-list {
+    display: grid;
+    max-width: 820px;
+}
+
+.absence-alert-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    padding: 12px 0;
+    border-top: 1px solid var(--line);
+}
+
+.absence-alert-row strong,
+.absence-alert-row small {
+    display: block;
+}
+
+.absence-alert-row small {
+    margin-top: 4px;
+    color: var(--muted);
+    font-size: 12px;
+}
+
+.absence-count {
+    margin-left: auto;
+    color: #7d2d2d;
+    font-size: 12px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.email-reminder {
+    flex: 0 0 auto;
+    color: var(--ink);
+    text-decoration: none;
+}
+
+.email-reminder:hover {
+    border-color: var(--gold);
 }
 
 .search-box {
-    max-width: 700px;
-    margin-top: 18px;
-    padding: 18px 20px;
-    border: 1px solid var(--line);
-    background: #fff;
+    display: grid;
+    grid-template-columns: 150px minmax(0, 1fr);
+    align-items: center;
+    gap: 16px;
+    max-width: 820px;
+    margin: 16px 0;
 }
 
 .search-box label {
     display: block;
-    margin-bottom: 8px;
+    margin: 0;
     color: var(--muted);
     font-size: 12px;
     font-weight: 700;
@@ -441,8 +593,7 @@ h2 {
 }
 
 .attendance-list {
-    max-width: 700px;
-    background: #fff;
+    max-width: 820px;
 }
 
 .attendance-row[hidden] {
@@ -454,7 +605,7 @@ h2 {
     align-items: center;
     justify-content: space-between;
     gap: 15px;
-    padding: 18px 20px;
+    padding: 16px 0;
     border-bottom: 1px solid var(--line);
 }
 
@@ -504,7 +655,7 @@ h2 {
 }
 
 .empty-note {
-    padding: 18px 20px;
+    padding: 20px 0;
     color: var(--muted);
     font-size: 13px;
 }
@@ -514,29 +665,30 @@ h2 {
 }
 
 .report-preview {
-    max-width: 700px;
+    max-width: 820px;
     display: flex;
     justify-content: space-between;
-    align-items: end;
-    margin-bottom: 26px;
-    padding: 28px;
-    border: 1px solid var(--line);
-    background: #fff;
+    align-items: center;
+    margin-bottom: 16px;
+    padding: 16px 0;
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
 }
 
 .report-preview h3 {
     margin: 0;
     font-family: 'Syne', sans-serif;
-    font-size: 25px;
+    font-size: 18px;
 }
 
 .report-preview p {
+    margin: 5px 0 0;
     color: var(--muted);
     font-size: 13px;
 }
 
 .report-preview .card-label {
-    margin-bottom: 12px;
+    margin: 0 0 5px;
 }
 
 .report-stat {
@@ -574,8 +726,18 @@ h2 {
         display: none;
     }
 
-    #report-view {
+    #attendance-view {
         display: block;
+    }
+
+    #attendance-view > :not(.report-section),
+    .report-section > :not(.report-preview):not(.eyebrow):not(h3) {
+        display: none !important;
+    }
+
+    .report-section {
+        border: 0;
+        padding: 0;
     }
 }
 
@@ -644,12 +806,66 @@ h2 {
     }
 
     .register-toolbar {
-        align-items: start;
-        flex-wrap: wrap;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: 12px;
     }
 
     .register-toolbar label {
+        grid-column: 1 / -1;
+        width: auto;
+        margin: 0;
+    }
+
+    .register-toolbar input {
+        min-width: 0;
         width: 100%;
+    }
+
+    .search-box {
+        grid-template-columns: 1fr;
+        gap: 8px;
+    }
+
+    .attendance-content {
+        padding: 18px;
+    }
+
+    .report-section {
+        padding: 18px;
+    }
+
+    .report-range {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    .attendance-row {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .student-actions {
+        flex-wrap: wrap;
+    }
+
+    .absence-monitor-heading {
+        align-items: stretch;
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    .holiday-form {
+        min-width: 0;
+    }
+
+    .absence-alert-row {
+        align-items: flex-start;
+        flex-wrap: wrap;
+    }
+
+    .absence-count {
+        margin-left: 0;
     }
 
     .report-preview {
@@ -662,8 +878,12 @@ h2 {
         text-align: left;
     }
 }
-.report-range { max-width: 700px; display: flex; gap: 18px; margin-bottom: 18px; padding: 18px 20px; border: 1px solid var(--line); background: #fff; }
-.report-range div { flex: 1; }
+.report-range { max-width: 820px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin-bottom: 16px; }
+.report-range div { min-width: 0; }
 .report-range label { display: block; margin-bottom: 8px; color: var(--muted); font-size: 12px; font-weight: 700; }
-.report-range input { width: 100%; padding: 10px; border: 1px solid var(--line); color: var(--ink); font: inherit; }
+.report-range input { width: 100%; min-height: 42px; padding: 9px 10px; border: 1px solid var(--line); color: var(--ink); font: inherit; }
 .report-range input:focus { border-color: var(--gold); outline: none; }
+.report-section { max-width: 820px; margin: 28px 0 32px; padding: 20px 24px; border: 1px solid var(--line); border-left: 3px solid var(--gold); background: #fff; }
+.report-section > h3 { margin: 0 0 8px; font-family: 'Syne', sans-serif; font-size: 24px; }
+.report-section > .view-intro { margin: 0 0 18px; }
+.attendance-content { max-width: 820px; padding: 20px 24px; border: 1px solid var(--line); background: #fff; }
