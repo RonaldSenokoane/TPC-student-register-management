@@ -1,1 +1,12 @@
 client-secret
+functions/node_modules/
+functions/.env*
+!functions/.env.example
+# Firebase debug logs
+firebase-debug.log
+firebase-debug.*.log
+
+# Local credentials and Firebase debug logs
+client-secret
+firebase-debug.log
+firebase-debug.*.log

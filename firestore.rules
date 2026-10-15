@@ -2,24 +2,36 @@ rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
+    function isApprovedOwner(userId) {
+      return request.auth != null
+        && request.auth.uid == userId;
+    }
+
+    function isAdministrator() {
+      return request.auth != null
+        && request.auth.token.role == 'administrator';
+    }
+
+    match /accessRequests/{requestId} {
+      allow read: if isAdministrator();
+      allow write: if false;
+    }
+
     match /users/{userId} {
-      allow read, write: if isOwner(userId);
+      allow read: if isApprovedOwner(userId);
+      allow write: if false;
 
       match /students/{studentId} {
-        allow read, write: if isOwner(userId);
+        allow read, write: if isApprovedOwner(userId);
       }
 
       match /attendance/{attendanceId} {
-        allow read, write: if isOwner(userId);
+        allow read, write: if isApprovedOwner(userId);
       }
 
       match /holidays/{holidayDate} {
-        allow read, write: if isOwner(userId);
+        allow read, write: if isApprovedOwner(userId);
       }
-    }
-
-    function isOwner(userId) {
-      return request.auth != null && request.auth.uid == userId;
     }
   }
 }

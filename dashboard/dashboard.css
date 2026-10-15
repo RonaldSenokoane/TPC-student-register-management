@@ -120,6 +120,10 @@ body {
     line-height: 1.35;
 }
 
+.menu-item[hidden] {
+    display: none;
+}
+
 .menu-item:hover,
 .menu-item.active {
     border-left-color: var(--gold);
@@ -282,6 +286,124 @@ h2 {
     color: var(--muted);
 }
 
+.proof-search,
+.proof-student-card {
+    max-width: 700px;
+}
+
+.proof-search > label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.proof-search > input {
+    width: 100%;
+    padding: 13px;
+    border: 1px solid var(--line);
+    outline: none;
+    color: var(--ink);
+    font: inherit;
+}
+
+.proof-search > input:focus {
+    border-color: var(--gold);
+    box-shadow: 0 0 0 3px rgba(231, 165, 29, .14);
+}
+
+.proof-search-results {
+    display: grid;
+    max-height: 280px;
+    overflow-y: auto;
+    border: 1px solid var(--line);
+    background: #fff;
+    box-shadow: 0 8px 20px rgba(18, 39, 39, .12);
+}
+
+.proof-search-results[hidden],
+.proof-student-card[hidden] {
+    display: none;
+}
+
+.proof-search-result {
+    display: grid;
+    gap: 4px;
+    padding: 12px 14px;
+    border: 0;
+    border-bottom: 1px solid var(--line);
+    color: var(--ink);
+    background: #fff;
+    cursor: pointer;
+    text-align: left;
+    font: inherit;
+}
+
+.proof-search-result:last-child {
+    border-bottom: 0;
+}
+
+.proof-search-result:hover,
+.proof-search-result:focus-visible {
+    background: #fafaf7;
+    outline: 2px solid var(--gold);
+    outline-offset: -2px;
+}
+
+.proof-search-result small {
+    color: var(--muted);
+    font-size: 12px;
+}
+
+.proof-feedback {
+    min-height: 18px;
+    margin: 10px 0 0;
+    color: var(--muted);
+    font-size: 13px;
+}
+
+.proof-student-card {
+    margin-top: 30px;
+    padding: 25px;
+    border: 1px solid var(--line);
+    background: #fff;
+}
+
+.proof-student-card .eyebrow {
+    margin-bottom: 8px;
+}
+
+.proof-student-card h3 {
+    margin: 0;
+    font-family: 'Syne', sans-serif;
+    font-size: 22px;
+}
+
+.proof-student-details {
+    display: grid;
+    grid-template-columns: minmax(130px, 1fr) 2fr;
+    gap: 12px 20px;
+    margin: 22px 0;
+}
+
+.proof-student-details dt {
+    color: var(--muted);
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.proof-student-details dd {
+    min-width: 0;
+    margin: 0;
+    overflow-wrap: anywhere;
+    font-size: 14px;
+}
+
+.proof-student-card .primary-action:disabled {
+    opacity: .55;
+    cursor: not-allowed;
+}
+
 .student-form {
     max-width: 620px;
     display: grid;
@@ -290,6 +412,47 @@ h2 {
     padding: 28px;
     border: 1px solid var(--line);
     background: #fff;
+}
+
+.administrator-requests {
+    max-width: 900px;
+}
+
+.administrator-request {
+    display: grid;
+    grid-template-columns: minmax(160px, 1fr) minmax(150px, auto) auto;
+    align-items: center;
+    gap: 18px;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--line);
+}
+
+.administrator-applicant strong,
+.administrator-applicant small {
+    display: block;
+}
+
+.administrator-applicant small {
+    margin-top: 5px;
+    color: var(--muted);
+    overflow-wrap: anywhere;
+}
+
+.administrator-request-status {
+    color: var(--muted);
+    font-size: 12px;
+}
+
+.administrator-request-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: end;
+    gap: 8px;
+}
+
+.administrator-request-actions .row-action:disabled {
+    cursor: wait;
+    opacity: .6;
 }
 
 .form-field label {
@@ -803,6 +966,28 @@ h2 {
     .student-form {
         grid-template-columns: 1fr;
         padding: 20px;
+    }
+
+    .administrator-request {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+
+    .administrator-request-actions {
+        justify-content: start;
+    }
+
+    .proof-student-card {
+        padding: 20px;
+    }
+
+    .proof-student-details {
+        grid-template-columns: 1fr;
+        gap: 6px;
+    }
+
+    .proof-student-details dd {
+        margin-bottom: 8px;
     }
 
     .register-toolbar {
