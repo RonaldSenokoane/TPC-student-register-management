@@ -166,7 +166,7 @@ exports.assignRoleAndInvite = onCall({ secrets: invitationSecrets }, async (requ
 		invitationExpiresAt: expiresAt
 	});
 
-	const invitationUrl = new URL('/Login-page/accept-invitation.html', appBaseUrl.value());
+	const invitationUrl = new URL('/auth/accept-invitation.html', appBaseUrl.value());
 	invitationUrl.searchParams.set('token', rawToken);
 	try {
 		await getSmtpTransport().sendMail({

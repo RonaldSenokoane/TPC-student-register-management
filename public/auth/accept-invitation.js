@@ -40,7 +40,7 @@ form.addEventListener('submit', async (event) => {
 			token: invitationToken,
 			password: password.value
 		});
-		window.location.replace('login.html?approved=1');
+		window.location.replace('sign-in.html?approved=1');
 	} catch (error) {
 		const messages = {
 			'functions/deadline-exceeded': 'This invitation has expired. Ask an administrator to send a new one.',

@@ -1,24 +1,33 @@
-
 {
   "hosting": {
-    "public": ".",
+    "public": "public",
     "ignore": [
-      "firebase.json",
-      ".firebaserc",
-      ".gitignore",
       "**/.*",
-      "functions/**",
       "**/node_modules/**",
-      "client-secret",
-      "firebase-debug.log",
-      "firebase-debug.*.log",
-      "FIREBASE-SETUP.md",
-      "firestore.rules"
+      "**/pages-needing-review.json",
+      "**/*.zip",
+      "**/*.pdf"
     ],
-    "rewrites": [
+    "redirects": [
       {
         "source": "/",
-        "destination": "/Login-page/login.html"
+        "destination": "/auth/sign-in.html",
+        "type": 302
+      },
+      {
+        "source": "/Login-page/login.html",
+        "destination": "/auth/sign-in.html",
+        "type": 302
+      },
+      {
+        "source": "/Login-page/accept-invitation.html",
+        "destination": "/auth/accept-invitation.html",
+        "type": 302
+      },
+      {
+        "source": "/dashboard/dashboard.html",
+        "destination": "/dashboard/index.html",
+        "type": 302
       }
     ]
   },

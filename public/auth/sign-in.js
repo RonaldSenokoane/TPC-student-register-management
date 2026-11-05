@@ -15,7 +15,6 @@ class LoginPage {
 		this.elements = {
 			form: document.querySelector('#auth-form'),
 			nameField: document.querySelector('#name-field'),
-			passwordField: document.querySelector('#password-field'),
 			nameInput: document.querySelector('#name'),
 			submitButton: document.querySelector('#submit-button'),
 			status: document.querySelector('#status'),
@@ -62,8 +61,6 @@ class LoginPage {
 			return;
 		}
 		const messages = {
-			'auth/api-key-not-valid': 'Firebase rejected this API key. Replace it with the current Web App key, and allow localhost in its API restrictions.',
-			'auth/email-already-in-use': 'An account already exists for this email.',
 			'auth/invalid-credential': 'The email or password is incorrect.',
 			'auth/weak-password': 'Use a password with at least 8 characters.',
 			'auth/invalid-email': 'Enter a valid email address.',
@@ -86,7 +83,7 @@ class LoginPage {
 			} else {
 				await signInWithEmailAndPassword(this.auth, email, this.elements.passwordInput.value);
 			}
-			window.location.href = '../dashboard/dashboard.html';
+			window.location.href = '../dashboard/index.html';
 		} catch (error) {
 			this.showError(error);
 			this.elements.submitButton.disabled = false;

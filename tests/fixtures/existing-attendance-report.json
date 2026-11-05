@@ -1,0 +1,304 @@
+{
+  "inputs": {
+    "students": [
+      {
+        "id": "a",
+        "name": "A",
+        "surname": "Learner",
+        "course": "Business",
+        "mode": "online"
+      },
+      {
+        "id": "b",
+        "name": "B",
+        "surname": "Learner",
+        "course": "Business",
+        "mode": "online"
+      },
+      {
+        "id": "c",
+        "name": "C",
+        "surname": "Learner",
+        "course": "IT",
+        "mode": "in-class"
+      }
+    ],
+    "attendance": [
+      [
+        "a_2026-01-05",
+        {
+          "present": true
+        }
+      ],
+      [
+        "a_2026-01-12",
+        {
+          "present": true
+        }
+      ],
+      [
+        "b_2026-01-06",
+        {
+          "present": false
+        }
+      ],
+      [
+        "c_2026-01-20",
+        {
+          "present": true
+        }
+      ]
+    ],
+    "start": "2026-01-01",
+    "end": "2026-01-31"
+  },
+  "output": {
+    "workbook": {
+      "sheets": [
+        {
+          "name": "Attendance Report",
+          "sheet": {
+            "G3": {
+              "t": "n",
+              "f": "AVERAGE(B3:F3)",
+              "v": 0
+            },
+            "G4": {
+              "t": "n",
+              "f": "AVERAGE(B4:F4)",
+              "v": 0
+            },
+            "H8": {
+              "t": "n",
+              "f": "SUM(C8:G8)",
+              "v": 0
+            },
+            "I8": {
+              "t": "n",
+              "f": "H8*50",
+              "v": 0
+            },
+            "L8": {
+              "t": "n",
+              "f": "IF(OR(J8=\"\",K8=\"\"),0,MAX(I8-J8-K8,0))",
+              "v": 0
+            },
+            "H9": {
+              "t": "n",
+              "f": "SUM(C9:G9)",
+              "v": 0
+            },
+            "I9": {
+              "t": "n",
+              "f": "H9*50",
+              "v": 0
+            },
+            "L9": {
+              "t": "n",
+              "f": "IF(OR(J9=\"\",K9=\"\"),0,MAX(I9-J9-K9,0))",
+              "v": 0
+            },
+            "H13": {
+              "t": "n",
+              "f": "SUM(C13:G13)",
+              "v": 0
+            },
+            "I13": {
+              "t": "n",
+              "f": "H13*50",
+              "v": 0
+            },
+            "L13": {
+              "t": "n",
+              "f": "IF(OR(J13=\"\",K13=\"\"),0,MAX(I13-J13-K13,0))",
+              "v": 0
+            },
+            "rows": [
+              [
+                "WEEKLY AND MONTHLY ATTENDANCE REPORT"
+              ],
+              [
+                "Cohort",
+                "Week 1",
+                "Week 2",
+                "Week 3",
+                "Week 4",
+                "Week 5",
+                "Monthly Average"
+              ],
+              [
+                "BUSINESS ONLINE",
+                0,
+                1,
+                1,
+                0,
+                0,
+                null
+              ],
+              [
+                "IT PHYSICAL",
+                0,
+                0,
+                0,
+                1,
+                0,
+                null
+              ],
+              [],
+              [
+                "BUSINESS ONLINE STUDENTS REGISTER"
+              ],
+              [
+                "No.",
+                "Name and Surname",
+                "Week 1",
+                "Week 2",
+                "Week 3",
+                "Week 4",
+                "Week 5",
+                "Monthly Days",
+                "Total Stipend",
+                "Unity",
+                "Summative",
+                "Payable"
+              ],
+              [
+                1,
+                "A Learner",
+                0,
+                1,
+                1,
+                0,
+                0,
+                null,
+                null,
+                "",
+                "",
+                null
+              ],
+              [
+                2,
+                "B Learner",
+                0,
+                0,
+                0,
+                0,
+                0,
+                null,
+                null,
+                "",
+                "",
+                null
+              ],
+              [],
+              [
+                "IT PHYSICAL STUDENTS REGISTER"
+              ],
+              [
+                "No.",
+                "Name and Surname",
+                "Week 1",
+                "Week 2",
+                "Week 3",
+                "Week 4",
+                "Week 5",
+                "Monthly Days",
+                "Total Stipend",
+                "Unity",
+                "Summative",
+                "Payable"
+              ],
+              [
+                1,
+                "C Learner",
+                0,
+                0,
+                0,
+                1,
+                0,
+                null,
+                null,
+                "",
+                "",
+                null
+              ],
+              []
+            ],
+            "!merges": [
+              {
+                "s": {
+                  "r": 0,
+                  "c": 0
+                },
+                "e": {
+                  "r": 0,
+                  "c": 6
+                }
+              },
+              {
+                "s": {
+                  "r": 5,
+                  "c": 0
+                },
+                "e": {
+                  "r": 5,
+                  "c": 11
+                }
+              },
+              {
+                "s": {
+                  "r": 10,
+                  "c": 0
+                },
+                "e": {
+                  "r": 10,
+                  "c": 11
+                }
+              }
+            ],
+            "!cols": [
+              {
+                "wch": 8
+              },
+              {
+                "wch": 26
+              },
+              {
+                "wch": 12
+              },
+              {
+                "wch": 12
+              },
+              {
+                "wch": 12
+              },
+              {
+                "wch": 12
+              },
+              {
+                "wch": 12
+              },
+              {
+                "wch": 12
+              },
+              {
+                "wch": 14
+              },
+              {
+                "wch": 10
+              },
+              {
+                "wch": 10
+              },
+              {
+                "wch": 12
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "filename": "TPC-register-2026-01-01-to-2026-01-31.xlsx"
+  },
+  "feedback": "Excel report downloaded with formulas now calculating correctly."
+}

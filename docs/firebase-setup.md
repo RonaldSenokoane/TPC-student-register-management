@@ -1,12 +1,12 @@
 # Firebase setup
 
-The application is configured for the `tpc-student-register` Firebase project. The sign-in page and dashboard import the public web app configuration from `firebase-config.js`. Firebase Authentication handles approved accounts. Cloud Firestore stores profiles, student records, attendance, holidays, and administrator-reviewed access requests. Firebase Functions performs privileged role assignment, invitation delivery, and account activation.
+The application is configured for the `tpc-student-register` Firebase project. The sign-in page and dashboard import the public web app configuration from `public/firebase-config.js`. Firebase Authentication handles approved accounts. Cloud Firestore stores profiles, student records, attendance, holidays, and administrator-reviewed access requests. Firebase Functions performs privileged role assignment, invitation delivery, and account activation.
 
 ## Firebase Console
 
 In the Firebase Console, open the `tpc-student-register` project and verify the following:
 
-1. **Web app:** Confirm the registered web app's SDK configuration matches `firebase-config.js`. The project ID must be `tpc-student-register` and the sender ID must be `189511938770`. Do not substitute the web-app selector from the Console URL for the SDK `appId`.
+1. **Web app:** Confirm the registered web app's SDK configuration matches `public/firebase-config.js`. The project ID must be `tpc-student-register` and the sender ID must be `189511938770`. Do not substitute the web-app selector from the Console URL for the SDK `appId`.
 2. **Authentication:** Enable Email/Password under Authentication > Sign-in method. Invitation acceptance verifies the invited email address when it activates the account.
 3. **Authorized domains:** Add `localhost` for local testing and the project's `tpc-student-register.web.app` and `tpc-student-register.firebaseapp.com` Hosting domains if they are not already present. Add any custom Hosting domain used by the app.
 4. **Firestore:** Create a Cloud Firestore database in Native mode if one does not already exist. Deploy `firestore.rules` before using the role workflow. Student, attendance, holiday, and profile data are accessible only to approved users; access requests can only be read by administrators.
@@ -48,7 +48,7 @@ The `.env.tpc-student-register` file and SMTP values are excluded from source co
 
 ## API key error
 
-If sign-in reports `auth/api-key-not-valid`, open Project settings > General in the Firebase Console, select the web app belonging to `tpc-student-register`, and copy its complete Firebase SDK configuration. Update `firebase-config.js` with those values, especially `apiKey` and `appId`. Do not use the web-app selector from the Console URL as the SDK `appId`. If the key has Google Cloud API restrictions, allow Firebase Authentication / Identity Toolkit and add the local or deployed site origins under HTTP referrers. Reload the sign-in page after updating the file.
+If sign-in reports `auth/api-key-not-valid`, open Project settings > General in the Firebase Console, select the web app belonging to `tpc-student-register`, and copy its complete Firebase SDK configuration. Update `public/firebase-config.js` with those values, especially `apiKey` and `appId`. Do not use the web-app selector from the Console URL as the SDK `appId`. If the key has Google Cloud API restrictions, allow Firebase Authentication / Identity Toolkit and add the local or deployed site origins under HTTP referrers. Reload the sign-in page after updating the file.
 
 ## Deploy
 
@@ -67,7 +67,7 @@ The `.firebaserc` file already selects `tpc-student-register` as the default pro
 Serve the project over HTTP so the browser can load the ES modules:
 
 ```powershell
-python -m http.server 8000
+python -m http.server 8000 --directory public
 ```
 
-Open `http://localhost:8000/Login-page/login.html` to submit an access request or sign in. Test role invitations with a configured SMTP mailbox and a deployed Functions backend; set `APP_BASE_URL=http://localhost:8000` before deploying if invitation links should return to the local server. A working registration workflow requires the Console settings, Firestore rules, Functions secrets, and approved role described above.
+Open `http://localhost:8000/auth/sign-in.html` to submit an access request or sign in. Test role invitations with a configured SMTP mailbox and a deployed Functions backend; set `APP_BASE_URL=http://localhost:8000` before deploying if invitation links should return to the local server. A working registration workflow requires the Console settings, Firestore rules, Functions secrets, and approved role described above.

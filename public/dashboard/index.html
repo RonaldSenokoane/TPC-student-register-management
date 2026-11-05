@@ -13,13 +13,14 @@
         rel="stylesheet">
     <link rel="stylesheet" href="dashboard.css">
     <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js"></script>
+    <script src="vendor/jspdf.umd.min.js"></script>
+    <script src="vendor/jszip.min.js"></script>
     <script type="module" src="dashboard.js" defer></script>
 </head>
 
 <body>
     <header class="topbar">
-        <a class="brand" href="dashboard.html"><img src="../Imgages/AndUsLoginLogo.png.png" alt="TPC logo"><span>TPC
+        <a class="brand" href="index.html"><img src="../assets/images/tpc-logo.png" alt="TPC logo"><span>TPC
                 Register</span></a>
         <div class="topbar-actions"><button class="mobile-menu" id="mobile-menu" type="button"
                 aria-label="Open menu">&#9776;</button><button class="sign-out" id="sign-out" type="button">Sign out
@@ -120,19 +121,34 @@
             <section class="view" id="proof-view">
                 <p class="eyebrow">Student documents</p>
                 <h2>Proof of registration</h2>
-                <p class="view-intro">Search for a registered student to review their details and download a proof of registration PDF.</p>
+                <p class="view-intro">Newly registered students are selected automatically after saving. Download an individual student's proof, or download the selected students as separate PDFs in a ZIP.</p>
                 <div class="proof-search">
                     <label for="proof-student-search">Search students</label>
                     <input id="proof-student-search" type="search" placeholder="Search by name, student ID, course, or email"
-                        autocomplete="off" aria-controls="proof-search-results" aria-autocomplete="list">
-                    <div class="proof-search-results" id="proof-search-results" role="listbox" aria-label="Matching students" hidden></div>
-                    <p class="proof-feedback" id="proof-search-feedback" role="status" aria-live="polite">Start typing to find a student in your register.</p>
+                        autocomplete="off" aria-controls="proof-search-results">
+                    <div class="proof-selection-actions">
+                        <button class="row-action" id="select-matching-proofs" type="button" disabled>Select all matching</button>
+                        <button class="row-action" id="clear-proof-selection" type="button" disabled>Clear selection</button>
+                    </div>
+                    <div class="proof-search-results" id="proof-search-results" role="group" aria-label="Matching students" hidden></div>
+                    <p class="proof-feedback" id="proof-search-feedback" role="status" aria-live="polite">Loading students...</p>
                 </div>
+                <section class="proof-batch" aria-label="Selected proofs of registration">
+                    <p class="proof-feedback" id="proof-selection-count" role="status" aria-live="polite">0 students selected</p>
+                    <p class="proof-feedback" id="proof-selection-feedback" role="status" aria-live="polite"></p>
+                    <ul class="proof-selected-list" id="proof-selected-list" aria-label="Selected students"></ul>
+                    <div class="proof-selection-actions">
+                        <button class="primary-action" id="download-selected-proofs" type="button" disabled>Download Selected Proofs (ZIP) <span aria-hidden="true">&#8595;</span></button>
+                        <button class="secondary-action" id="download-all-proofs" type="button" disabled>Download All Proofs (ZIP)</button>
+                    </div>
+                    <progress id="proof-generation-progress" value="0" max="1" aria-label="Proof generation progress" hidden></progress>
+                    <p class="proof-feedback" id="proof-batch-feedback" role="status" aria-live="polite"></p>
+                </section>
                 <section class="proof-student-card" id="proof-student-card" aria-live="polite" hidden>
                     <p class="eyebrow">Selected student</p>
-                    <h3 id="proof-student-name"></h3>
+                    <h3 id="proof-student-name" tabindex="-1"></h3>
                     <dl class="proof-student-details" id="proof-student-details"></dl>
-                    <button class="primary-action" id="download-proof" type="button" disabled>Download proof of registration PDF
+                    <button class="primary-action" id="download-proof" type="button" disabled>Download Proof of Registration
                         <span aria-hidden="true">&#8595;</span></button>
                     <p class="proof-feedback" id="proof-download-feedback" role="status" aria-live="polite"></p>
                 </section>
